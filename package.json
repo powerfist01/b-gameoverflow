@@ -1,0 +1,12 @@
+{
+  "name": "b-gameoverflow",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "express": "~4.16.1",
+    "http-errors": "^1.8.0"
+  }
+}
