@@ -17,7 +17,7 @@ module.exports = {
     
     res.send("lol-questions")
   },
-  addQuestion: async (req,res,next) => {
+  createQuestion: async (req,res,next) => {
     console.log(req);
     
     res.send("lol-questions")
