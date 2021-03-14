@@ -14,9 +14,11 @@ app.use(logger('dev'));
 
 const indexRouter = require('./routes/index');
 const questionRouter = require('./routes/questions')(express);
+const gameRouter = require('./routes/games')(express);
 
 
 app.use('/', indexRouter);
 app.use('/questions', questionRouter);
+app.use('/games', gameRouter);
 
 module.exports = app;

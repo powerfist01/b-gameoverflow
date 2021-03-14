@@ -23,7 +23,6 @@ class QuestionController {
   async addTag(){
 
   }
-  async 
 }
 
 module.exports = QuestionController;
