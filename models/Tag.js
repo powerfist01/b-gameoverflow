@@ -6,6 +6,10 @@ const TagSchema = new Schema({
     type: String,
     required: true
   },
+  slug: {
+    type: String,
+    required: true
+  },
   details: {
     type: String
   },
@@ -15,6 +19,9 @@ const TagSchema = new Schema({
   created_at: {
     type: Date,
     default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 });
 
