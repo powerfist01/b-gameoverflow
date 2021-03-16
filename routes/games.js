@@ -1,5 +1,5 @@
 module.exports = function(express){
-  const gamesService = require('../sevices/games');
+  const gamesService = require('../services/games');
   const router = express.Router();
   
   router.get('/', gamesService.getAllGames);

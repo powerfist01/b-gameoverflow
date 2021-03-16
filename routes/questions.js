@@ -1,5 +1,5 @@
 module.exports = function(express){
-  const questionService = require('../sevices/questions');
+  const questionService = require('../services/questions');
   const router = express.Router();
   
   router.get('/', questionService.getAllQuestions);

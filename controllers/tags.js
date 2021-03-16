@@ -18,6 +18,11 @@ class TagController{
     let z = await Tag.updateOne({name: name},{$push: {question_ids: question}});
     console.log(z)
   }
+  async getAllTags(){
+    let z = await Tag.find();
+    console.log("This controller was calledmm");
+    return z;
+  }
 }
 
 module.exports = TagController;
