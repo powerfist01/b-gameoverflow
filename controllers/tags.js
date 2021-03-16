@@ -1,6 +1,7 @@
 const Tag = require('../models/Tag');
 
 class TagController{
+  limit = 36;
   async createTag(tag){
     console.log(tag);
     let t = new Tag({
@@ -19,9 +20,12 @@ class TagController{
     console.log(z)
   }
   async getAllTags(){
-    let z = await Tag.find();
-    console.log("This controller was calledmm");
-    return z;
+    let tags = await Tag.find().limit(this.limit);
+    let totalTags = await Tag.find().count();
+    return {
+      tags: tags,
+      totalTags: totalTags
+    };
   }
 }
 

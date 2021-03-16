@@ -1,11 +1,14 @@
 const express = require('express');
 const logger = require('morgan');
+const cors = require('cors')
 
 require('dotenv').config();
 
 require('./services/db');
 
 const app = express();
+
+app.use(cors())
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
