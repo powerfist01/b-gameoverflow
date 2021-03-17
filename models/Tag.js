@@ -13,7 +13,10 @@ const TagSchema = new Schema({
   details: {
     type: String
   },
-  question_ids: {
+  questions: {
+    type: Array
+  },
+  games: {
     type: Array
   },
   created_at: {
