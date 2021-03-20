@@ -9,10 +9,21 @@ class QuestionController {
     console.log(res);
     return res;
   }
-  async createQuestion(ques){
-    let question = new Question(ques);
-    let z = await question.save();
-    console.log(z);
+  async createQuestion(title, body){
+    let newQues = new Question({
+      title: title,
+      body: body,
+      author: 'sujeet'
+    });
+    try{
+      let z = await newQues.save();
+      console.log(z);
+      return z;
+    } catch(err){
+      console.log(err);
+      return 404;
+    }
+    
   }
   async deleteQuestion(){
 

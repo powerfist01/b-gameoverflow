@@ -6,7 +6,7 @@ module.exports = function(express){
 
   router.get('/:questionId', questionService.getQuestionById);
 
-  router.post('/createQuestion', questionService.createQuestion);
+  router.post('/ask', questionService.create);
 
   return router;
 }

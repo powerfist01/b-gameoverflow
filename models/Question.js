@@ -2,26 +2,34 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const QuestionSchema = new Schema({
-  question: {
+  title: {
     type: String,
     required: true
   },
-  question_id: {
+  questionId: {
     type: Number,
-    required: true
+    required: false
   },
   author: {
     type: String,
     required: true
+  },
+  views: {
+    type: Number,
+    required: true,
+    default: 0
   },
   votes: {
     type: Number,
     required: true,
     default: 0
   },
-  created_at: {
+  createdAt: {
     type: Date,
     default: Date.now
+  },
+  updatedAt: {
+    type: Date
   }
 });
 
