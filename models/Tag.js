@@ -6,11 +6,7 @@ const TagSchema = new Schema({
     type: String,
     required: true
   },
-  slug: {
-    type: String,
-    required: true
-  },
-  details: {
+  body: {
     type: String
   },
   questions: {
@@ -19,12 +15,13 @@ const TagSchema = new Schema({
   games: {
     type: Array
   },
-  created_at: {
+  createdAt: {
     type: Date,
     default: Date.now
   },
-  updated_at: {
-    type: Date
+  updatedAt: {
+    type: Date,
+    default: Date.now
   }
 });
 

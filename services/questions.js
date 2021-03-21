@@ -23,8 +23,15 @@ module.exports = {
   create: async (req,res,next) => {
     const {title, body, tags} = req.body;
     let QC = new QuestionController();
-    let resp = await QC.createQuestion(title, body);
-    console.log(resp)
-    res.send("Aaddded question")
+    let author = 'sujeet';
+    let resp = await QC.createQuestion(title, body, author);
+    console.log(resp);
+    if(resp['isSaved'] == true){
+      let T = new TagController(tags, resp['questionId']);
+      let z = await T.addTags();
+      res.send(resp);
+    } else {
+      res.send(resp);
+    }
   }
 }

@@ -9,19 +9,25 @@ class QuestionController {
     console.log(res);
     return res;
   }
-  async createQuestion(title, body){
+  async createQuestion(title, body, author){
     let newQues = new Question({
       title: title,
       body: body,
-      author: 'sujeet'
+      author: author
     });
     try{
       let z = await newQues.save();
       console.log(z);
-      return z;
+      return {
+        isSaved: true,
+        questionId: z._id
+      };
     } catch(err){
-      console.log(err);
-      return 404;
+      console.log('Error in saving the new question')
+      return {
+        isSaved: false,
+        error: err
+      }
     }
     
   }
