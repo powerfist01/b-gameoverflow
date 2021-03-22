@@ -15,9 +15,9 @@ class QuestionController {
       body: body,
       author: author
     });
+    console.log(newQues);
     try{
       let z = await newQues.save();
-      console.log(z);
       return {
         isSaved: true,
         questionId: z._id
