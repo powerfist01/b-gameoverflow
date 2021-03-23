@@ -3,10 +3,9 @@ module.exports = {
 
   getAllTags: async (req,res,next) => {
     let t = new TagController();
-    console.log(req.params);
-    console.log(req.query);
     let data = await t.getAllTags();
-    data['totalPages'] = Math.ceil(data['totalTags']/36).toString();
+    // data['totalPages'] = Math.ceil(data['totalTags']/36).toString();
+    console.log(data)
     res.send(data);
   },
   getTagById: async (req,res,next) => {

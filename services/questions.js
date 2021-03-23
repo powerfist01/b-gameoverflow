@@ -18,7 +18,7 @@ module.exports = {
     console.log(req.body);
     let QC = new QuestionController();
     let author = 'sujeet';
-    let resp = await QC.createQuestion(title, body, author);
+    let resp = await QC.createQuestion(title, body, tags, author);
     console.log(resp);
     if(resp['isSaved'] == true){
       let T = new TagController(tags, resp['questionId']);

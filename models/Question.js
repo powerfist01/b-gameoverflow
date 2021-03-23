@@ -10,6 +10,10 @@ const QuestionSchema = new Schema({
     type: String,
     required: true
   },
+  tags: {
+    type: Array,
+    required: true
+  },
   questionId: {
     type: Number,
     required: false

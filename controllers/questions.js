@@ -5,15 +5,16 @@ class QuestionController {
     
   }
   async getAllQuestions(){
-    let res = await Question.find({}).sort({created_date: -1});
+    let res = await Question.find({}).sort({createdAt: -1});
     console.log(res);
     return res;
   }
-  async createQuestion(title, body, author){
+  async createQuestion(title, body, tags, author){
     let newQues = new Question({
       title: title,
       body: body,
-      author: author
+      author: author,
+      tags: tags
     });
     console.log(newQues);
     try{

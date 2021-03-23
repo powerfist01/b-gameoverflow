@@ -30,12 +30,12 @@ class TagController{
     
   }
   async getAllTags(){
-    // let tags = await Tag.find().limit(this.size);
-    // let totalTags = await Tag.find().count();
-    // return {
-    //   tags: tags,
-    //   totalTags: totalTags
-    // };
+    let tags = await Tag.find().limit(this.size);
+    let totalTags = await Tag.find().count();
+    return {
+      tags: tags,
+      totalTags: totalTags
+    };
   }
   async addQuestionIdInTag(tag){
     // creating a new tag if not exists, if exists push the question id
