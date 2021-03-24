@@ -10,7 +10,7 @@ const GameSchema = new Schema({
     type: String,
     required: true
   },
-  game_id: {
+  gameId: {
     type: Number,
     required: true
   },
@@ -26,11 +26,11 @@ const GameSchema = new Schema({
   website: {
     type: String
   },
-  created_at: {
+  createdAt: {
     type: Date,
     default: Date.now
   },
-  updated_at: {
+  updatedAt: {
     type: Date
   }
 });

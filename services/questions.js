@@ -9,9 +9,11 @@ module.exports = {
     res.send(questions);
   },
   getQuestionById: async (req,res,next) => {
-    console.log(req);
-    
-    res.send("lol-questions")
+    console.log(req.params);
+    let QC = new QuestionController();
+
+    let question = await QC.getQuestionByCounter(req.params.id);
+    res.send(question);
   },
   create: async (req,res,next) => {
     const {title, body, tags} = req.body;
@@ -21,7 +23,7 @@ module.exports = {
     let resp = await QC.createQuestion(title, body, tags, author);
     console.log(resp);
     if(resp['isSaved'] == true){
-      let T = new TagController(tags, resp['questionId']);
+      let T = new TagController(tags, resp['_id']);
       let z = await T.addTags();
       res.send(resp);
     } else {

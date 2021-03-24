@@ -14,7 +14,7 @@ const QuestionSchema = new Schema({
     type: Array,
     required: true
   },
-  questionId: {
+  counter: {
     type: Number,
     required: false
   },
