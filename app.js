@@ -13,7 +13,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(logger('dev'));
+app.use(logger('dev'));    // configire morgan
 
 const indexRouter = require('./routes/index');
 const questionRouter = require('./routes/questions')(express);
