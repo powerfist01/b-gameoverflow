@@ -27,6 +27,16 @@ const QuestionSchema = new Schema({
     required: true,
     default: 0
   },
+  upvotes: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  downvotes: {
+    type: Number,
+    required: true,
+    default: 0
+  },
   votes: {
     type: Number,
     required: true,
