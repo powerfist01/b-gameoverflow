@@ -32,10 +32,18 @@ const QuestionSchema = new Schema({
     required: true,
     default: 0
   },
+  upvoters: {
+    type: Array,
+    required: false,
+  },
   downvotes: {
     type: Number,
     required: true,
     default: 0
+  },
+  downvoters: {
+    type: Array,
+    required: false,
   },
   votes: {
     type: Number,
