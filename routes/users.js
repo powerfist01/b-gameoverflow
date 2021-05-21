@@ -39,10 +39,37 @@ router.post('/register', (req, res) => {
 
 // Login
 router.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/users/login'
-  })(req, res, next);
+//   passport.authenticate('local', {
+//     successRedirect: '/dashboard',
+//     failureRedirect: '/users/login'
+//   })(req, res, next);
+    users.userModel.findOne({ username: req.body.username }, function (err, doc) {
+        if (err)
+            throw err;
+        if (doc != null) {
+            if (doc.password === req.body.password) {
+                req.session.username = req.body.username;
+                var payload = {
+                    id: doc._id,
+                    username: doc.username,
+                    password: doc.password,
+                    email: doc.email
+                }
+
+                token = jwt.sign(payload, config.secretOrKey);
+                res.cookie('jwt', token);
+                res.redirect('/dashboard');
+            }
+            else {
+                console.log('Invalid Credentials');
+                res.render('login', { message: 'Invalid Credentials' });
+            }
+        }
+        else {
+            console.log('User not found');
+            res.render('login', { message: 'User not found ' });
+        }
+    })
 });
 
 // Logout
