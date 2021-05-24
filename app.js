@@ -1,6 +1,9 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors')
+const passport = require('passport')
+
+require('./middlewares/passport')(passport);
 
 require('dotenv').config();
 

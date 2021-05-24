@@ -1,80 +1,116 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
+
 // Load User model
 const User = require('../models/User');
+const config = require('../config/index');
 
 // Register
-router.post('/register', (req, res) => {
-  const { username, email, password, password2 } = req.body;
-  console.log(req.body);
+router.post('/register', (req, res, next) => {
+    //   const { username, email, password, password2 } = req.body;
+    //   console.log(req.body);
 
-  User.findOne({ email: email }).then(user => {
-    if (user) {
-      res.status(400).send({ msg: 'Email already exists' })
+    //   User.findOne({ email: email }).then(user => {
+    //     if (user) {
+    //       res.status(400).send({ msg: 'Email already exists' })
+    //     } else {
+    //       const newUser = new User({
+    //         username,
+    //         email,
+    //         password
+    //       });
+// 
+    //       bcrypt.genSalt(10, (err, salt) => {
+    //         bcrypt.hash(newUser.password, salt, (err, hash) => {
+    //           if (err) throw err;
+    //           newUser.password = hash;
+    //           newUser
+    //             .save()
+    //             .then(user => {
+    //               console.log('User is saved', user);
+    //               res.status(201).send('User created!')
+    //             })
+    //             .catch(err => console.log(err));
+    //         });
+    //       });
+    //     }
+    //   });
+    const { username, email, password, password2 } = req.body;
+    if (!username || !password) {
+        res.json({ success: false, msg: 'Please pass username and password.' });
     } else {
-      const newUser = new User({
-        username,
-        email,
-        password
-      });
-
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => {
-              console.log('User is saved', user);
-              res.status(201).send('User created!')
-            })
-            .catch(err => console.log(err));
+        let newUser = new User({
+            username,
+            password,
+            email
         });
-      });
+        // save the user
+        newUser.save(function (err) {
+            if (err) {
+                console.log(err);
+                return res.json({ success: false, msg: 'Username already exists.' });
+            }
+            res.json({ success: true, msg: 'Successful created new user.' });
+        });
     }
-  });
 });
 
-// Login
-router.post('/login', (req, res, next) => {
-//   passport.authenticate('local', {
-//     successRedirect: '/dashboard',
-//     failureRedirect: '/users/login'
-//   })(req, res, next);
-    users.userModel.findOne({ username: req.body.username }, function (err, doc) {
-        if (err)
-            throw err;
-        if (doc != null) {
-            if (doc.password === req.body.password) {
-                req.session.username = req.body.username;
-                var payload = {
-                    id: doc._id,
-                    username: doc.username,
-                    password: doc.password,
-                    email: doc.email
+router.post('/login', async (req, res, next) => {
+    // passport.authenticate('local', async (err, user, info) => {
+    //     try {
+    //         if (err || !user) {
+    //             const error = new Error('An error occurred.');
+
+    //             return next(error);
+    //         }
+
+    //         req.login(user, { session: false }, async (error) => {
+    //             if (error) return next(error);
+
+    //             const body = { _id: user._id, email: user.email };
+    //             const token = jwt.sign({ user: body }, 'TOP_SECRET');
+
+    //             return res.json({ token });
+    //         }
+    //         );
+    //     } catch (error) {
+    //         console.log("this is an error", error)
+    //         return next(error);
+    //     }
+    // }
+    // )(req, res, next);
+    User.findOne({
+        username: req.body.username
+    }, function (err, user) {
+        if (err) throw err;
+
+        if (!user) {
+            res.status(401).send({ success: false, msg: 'Authentication failed. User not found.' });
+        } else {
+            // check if password matches
+            user.comparePassword(req.body.password, function (err, isMatch) {
+                if (isMatch && !err) {
+                    // if user is found and password is right create a token
+                    let token = jwt.sign(user.toJSON(), config.secret);
+                    // return the information including token as JSON
+                    res.json({ success: true, token: 'JWT ' + token });
+                } else {
+                    res.status(401).send({ success: false, msg: 'Authentication failed. Wrong password.' });
                 }
+            });
+        }
+    });
+}
+);
 
-                token = jwt.sign(payload, config.secretOrKey);
-                res.cookie('jwt', token);
-                res.redirect('/dashboard');
-            }
-            else {
-                console.log('Invalid Credentials');
-                res.render('login', { message: 'Invalid Credentials' });
-            }
-        }
-        else {
-            console.log('User not found');
-            res.render('login', { message: 'User not found ' });
-        }
-    })
-});
 
 // Logout
-router.get('/logout', (req, res) => {
-  req.logout();
+router.get('/logout', passport.authenticate('jwt', { session: false}), (req, res) => {
+    req.logout();
+    res.json({success: true, msg: 'Sign out successfully.'});
 });
 
 module.exports = router;
