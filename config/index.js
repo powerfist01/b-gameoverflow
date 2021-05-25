@@ -1,5 +1,5 @@
 module.exports =  {
   port: process.env.PORT,
-  dbUri: process.env.DATABASE_URI,
+  dbUri: 'mongodb://localhost:27017/gameoverflow',
   secret: 'THISISAVERYHARDSECRET'
 }

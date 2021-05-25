@@ -10,34 +10,6 @@ const config = require('../config/index');
 
 // Register
 router.post('/register', (req, res, next) => {
-    //   const { username, email, password, password2 } = req.body;
-    //   console.log(req.body);
-
-    //   User.findOne({ email: email }).then(user => {
-    //     if (user) {
-    //       res.status(400).send({ msg: 'Email already exists' })
-    //     } else {
-    //       const newUser = new User({
-    //         username,
-    //         email,
-    //         password
-    //       });
-// 
-    //       bcrypt.genSalt(10, (err, salt) => {
-    //         bcrypt.hash(newUser.password, salt, (err, hash) => {
-    //           if (err) throw err;
-    //           newUser.password = hash;
-    //           newUser
-    //             .save()
-    //             .then(user => {
-    //               console.log('User is saved', user);
-    //               res.status(201).send('User created!')
-    //             })
-    //             .catch(err => console.log(err));
-    //         });
-    //       });
-    //     }
-    //   });
     const { username, email, password, password2 } = req.body;
     if (!username || !password) {
         res.json({ success: false, msg: 'Please pass username and password.' });
@@ -59,32 +31,7 @@ router.post('/register', (req, res, next) => {
 });
 
 router.post('/login', async (req, res, next) => {
-    // passport.authenticate('local', async (err, user, info) => {
-    //     try {
-    //         if (err || !user) {
-    //             const error = new Error('An error occurred.');
-
-    //             return next(error);
-    //         }
-
-    //         req.login(user, { session: false }, async (error) => {
-    //             if (error) return next(error);
-
-    //             const body = { _id: user._id, email: user.email };
-    //             const token = jwt.sign({ user: body }, 'TOP_SECRET');
-
-    //             return res.json({ token });
-    //         }
-    //         );
-    //     } catch (error) {
-    //         console.log("this is an error", error)
-    //         return next(error);
-    //     }
-    // }
-    // )(req, res, next);
-    User.findOne({
-        username: req.body.username
-    }, function (err, user) {
+    User.findOne({username: req.body.username}, function (err, user) {
         if (err) throw err;
 
         if (!user) {
@@ -103,14 +50,38 @@ router.post('/login', async (req, res, next) => {
             });
         }
     });
-}
-);
+});
 
+router.get('/get_all_users', passport.authenticate('jwt', { session: false}), async (req,res,next)=>{
+    let token = getToken(req.headers);
+    console.log(req.headers);
+    if (token) {
+        User.find(function (err, users) {
+            if (err) return next(err);
+            res.json(users);
+        });
+    } else {
+        return res.status(403).send({success: false, msg: 'Unauthorized.'});
+    }
+})
 
 // Logout
 router.get('/logout', passport.authenticate('jwt', { session: false}), (req, res) => {
     req.logout();
     res.json({success: true, msg: 'Sign out successfully.'});
 });
+
+getToken = function (headers) {
+    if (headers && headers.authorization) {
+        let parted = headers.authorization.split(' ');
+        if (parted.length === 2) {
+            return parted[1];
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+};
 
 module.exports = router;

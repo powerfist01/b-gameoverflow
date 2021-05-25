@@ -46,24 +46,6 @@ UserSchema.pre('save', function (next) {
                 next();
             });
         });
-
-
-        // bcrypt.genSalt(10, (err, salt) => {
-        //     bcrypt.hash(newUser.password, salt, (err, hash) => {
-        //       if (err) throw err;
-        //       newUser.password = hash;
-        //       newUser
-        //         .save()
-        //         .then(user => {
-        //           console.log('User is saved', user);
-        //           res.status(201).send('User created!')
-        //         })
-        //         .catch(err => console.log(err));
-        //     });
-        //   });
-
-
-        console.log('Kaam samapt', this)
     } else {
         return next();
     }
