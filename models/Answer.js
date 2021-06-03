@@ -19,6 +19,12 @@ const AnswerSchema = new Schema({
     required: true,
     default: 0
   },
+  accepted_answer: {
+    type: Boolean
+  },
+  accepted_answer_at: {
+    type: Date
+  },
   created_at: {
     type: Date,
     default: Date.now
