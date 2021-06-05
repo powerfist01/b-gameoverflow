@@ -12,7 +12,7 @@ module.exports = {
     console.log(req.params);
     let QC = new QuestionController();
 
-    let question = await QC.getQuestionByCounter(req.params.id);
+    let question = await QC.getQuestionByQuestionNumber(req.params.id);
     res.send(question);
   },
   create: async (req,res,next) => {
@@ -29,5 +29,10 @@ module.exports = {
     } else {
       res.send(resp);
     }
+  },
+  upvoteQuestion: async (req, res, next) => {
+    const {questionNumber, upvoter} = req.body;
+
+
   }
 }

@@ -1,12 +1,14 @@
-module.exports = function(express){
-  const questionService = require('../services/questions');
-  const router = express.Router();
-  
-  router.get('/', questionService.getAllQuestions);
+module.exports = function (express) {
+    const questionService = require('../services/questions');
+    const router = express.Router();
 
-  router.get('/:id', questionService.getQuestionById);
+    router.get('/', questionService.getAllQuestions);
 
-  router.post('/ask', questionService.create);
+    router.get('/:id', questionService.getQuestionById);
 
-  return router;
+    router.post('/ask', questionService.create);
+
+    router.post('/upvoteQuestion', questionService.upvoteQuestion)
+
+    return router;
 }

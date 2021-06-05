@@ -1,5 +1,5 @@
 const Question = require('../models/Question')
-const QuestionCounter = require('../models/QuestionCounter')
+const QuestionNumber = require('../models/QuestionNumber')
 
 class QuestionController {
   constructor(){
@@ -10,29 +10,31 @@ class QuestionController {
     return res;
   }
   async getQuestionCount(){
-    let counter = await QuestionCounter.findByIdAndUpdate('605ae0a4d0448e169830e526',{$inc: {counter: 1}}, {useFindAndModify: false});
-    if(counter.length == 0){
-      counter = 1;
-      let newCounter = new QuestionCounter({
-        counter: counter
+    let questionNumber = await QuestionNumber.findByIdAndUpdate('605ae0a4d0448e169830e526',{$inc: {questionNumber: 1}}, {useFindAndModify: false});
+
+    if(questionNumber.length == 0){
+      questionNumber = 1;
+      let newQuestionNumber = new QuestionNumber({
+        questionNumber: questionNumber
       })
-      let y = await newCounter.save();
+      await newQuestionNumber.save();
     } else {
-      counter = counter.counter;
+      questionNumber = questionNumber.questionNumber;
     }
-    return counter;
+    
+    return questionNumber;
   }
   async createQuestion(title, body, tags, author){
-    let counter = await this.getQuestionCount();
-    let newQues = new Question({
+    let questionNumber = await this.getQuestionCount();
+    let newQuestion = new Question({
       title: title,
       body: body,
-      counter: counter,
+      questionNumber: questionNumber,
       author: author,
       tags: tags
     });
     try{
-      let z = await newQues.save();
+      let z = await newQuestion.save();
       return {
         isSaved: true,
         _id: z._id
@@ -46,10 +48,10 @@ class QuestionController {
     }
     
   }
-  async getQuestionByCounter(counter){
-    console.log(counter);
+  async getQuestionByQuestionNumber(questionNumber){
+    console.log(questionNumber);
     try{
-      let question = await Question.find({counter: counter});
+      let question = await Question.find({questionNumber: questionNumber});
       console.log(question);
       return question;
     } catch(err){
