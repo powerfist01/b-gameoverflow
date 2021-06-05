@@ -22,7 +22,7 @@ const indexRouter = require('./routes/index');
 const questionRouter = require('./routes/questions')(express);
 const gameRouter = require('./routes/games')(express);
 const tagRouter = require('./routes/tags')(express);
-const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users')(express);
 
 app.use('/', indexRouter);
 app.use('/questions', questionRouter);
