@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors')
 const passport = require('passport')
+const helmet = require("helmet");
 
 require('./middlewares/passport')(passport);
 
@@ -12,6 +13,7 @@ require('./services/db');
 const app = express();
 
 app.use(cors());
+app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
