@@ -1,10 +1,10 @@
 module.exports = function(express){
-  const tagService = require('../services/tags');
+  const tagController = require('../controllers/tags');
   const router = express.Router();
   
-  router.get('/getAllTags', tagService.getAllTags);
+  router.get('/getAllTags', tagController.getAllTags);
 
-  router.get('/:tagId', tagService.getTagById);
+  router.get('/:tagId', tagController.getTagById);
 
   return router;
 }

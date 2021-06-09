@@ -1,58 +1,16 @@
-const Tag = require('../models/Tag');
+const TagService = require('../services/tags');
+module.exports = {
 
-class TagController{
-  size = 36;
-  tags = [];
-  questionId = '';
-  constructor(tags, questionId){
-    this.tags = tags;
-    this.questionId = questionId;
-  }
-  async addTags(){
-    let totalTagsSaved = 0;
-    let self = this;
-    this.tags.forEach(async function(tag){
-      let z = await self.addQuestionIdInTag(tag);
-      console.log(z)
-      if(z['isSaved'] == true){
-        console.log('Tag saved!')
-        totalTagsSaved += 1;
-      } else {
-        console.log("Error occured in saving tag", tag);
-      }
-    })
-    return {
-      totalTagsSaved: totalTagsSaved,
-      totalTags: this.tags.length
-    }
-  }
-  async deleteTag(){
+  getAllTags: async (req,res,next) => {
+    let t = new TagService();
+    let data = await t.getAllTags();
+    // data['totalPages'] = Math.ceil(data['totalTags']/36).toString();
+    console.log(data)
+    res.send(data);
+  },
+  getTagById: async (req,res,next) => {
+    console.log(req);
     
-  }
-  async getAllTags(){
-    let tags = await Tag.find().limit(this.size);
-    let totalTags = await Tag.find().count();
-    return {
-      tags: tags,
-      totalTags: totalTags
-    };
-  }
-  async addQuestionIdInTag(tag){
-    // creating a new tag if not exists, if exists push the question id
-    let update = {$push: { questions: this.questionId }, updatedAt: Date.now()};
-    let options = {upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
-    try{
-      let z = await Tag.findOneAndUpdate({name:tag},update, options);
-      return {
-        isSaved: true
-      }
-    } catch(err) {
-      console.log(err);
-      return {
-        isSaved: false
-      }
-    }  
+    res.send("lol-questions")
   }
 }
-
-module.exports = TagController;

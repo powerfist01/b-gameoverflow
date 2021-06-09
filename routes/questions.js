@@ -1,14 +1,14 @@
 module.exports = function (express) {
-    const questionService = require('../services/questions');
+    const questionController = require('../controllers/questions');
     const router = express.Router();
 
-    router.get('/', questionService.getAllQuestions);
+    router.get('/', questionController.getAllQuestions);
 
-    router.get('/:id', questionService.getQuestionById);
+    router.get('/:id', questionController.getQuestionById);
 
-    router.post('/ask', questionService.create);
+    router.post('/ask', questionController.create);
 
-    router.post('/upvoteQuestion', questionService.upvoteQuestion)
+    router.post('/upvoteQuestion', questionController.upvoteQuestion)
 
     return router;
 }

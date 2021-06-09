@@ -1,38 +1,72 @@
-const QuestionController = require('../controllers/questions');
-const TagController = require('../controllers/tags');
+const Question = require('../models/Question')
+const QuestionNumber = require('../models/QuestionNumber')
 
-module.exports = {
-  getAllQuestions: async (req,res,next) => {
-    let QC = new QuestionController();
-    let questions = await QC.getAllQuestions();
-    console.log(questions);
-    res.send(questions);
-  },
-  getQuestionById: async (req,res,next) => {
-    console.log(req.params);
-    let QC = new QuestionController();
+class QuestionService {
+  constructor(){
+    
+  }
+  async getAllQuestions(){
+    let res = await Question.find({}).sort({createdAt: -1});
+    return res;
+  }
+  async getQuestionCount(){
+    let questionNumber = await QuestionNumber.findByIdAndUpdate('605ae0a4d0448e169830e526',{$inc: {questionNumber: 1}}, {useFindAndModify: false});
 
-    let question = await QC.getQuestionByQuestionNumber(req.params.id);
-    res.send(question);
-  },
-  create: async (req,res,next) => {
-    const {title, body, tags} = req.body;
-    console.log(req.body);
-    let QC = new QuestionController();
-    let author = 'sujeet';
-    let resp = await QC.createQuestion(title, body, tags, author);
-    console.log(resp);
-    if(resp['isSaved'] == true){
-      let T = new TagController(tags, resp['_id']);
-      let z = await T.addTags();
-      res.send(resp);
+    if(questionNumber.length == 0){
+      questionNumber = 1;
+      let newQuestionNumber = new QuestionNumber({
+        questionNumber: questionNumber
+      })
+      await newQuestionNumber.save();
     } else {
-      res.send(resp);
+      questionNumber = questionNumber.questionNumber;
     }
-  },
-  upvoteQuestion: async (req, res, next) => {
-    const {questionNumber, upvoter} = req.body;
+    
+    return questionNumber;
+  }
+  async createQuestion(title, body, tags, author){
+    let questionNumber = await this.getQuestionCount();
+    let newQuestion = new Question({
+      title: title,
+      body: body,
+      questionNumber: questionNumber,
+      author: author,
+      tags: tags
+    });
+    try{
+      let z = await newQuestion.save();
+      return {
+        isSaved: true,
+        _id: z._id
+      };
+    } catch(err){
+      console.log('Error in saving the new question', err)
+      return {
+        isSaved: false,
+        error: err
+      }
+    }
+    
+  }
+  async getQuestionByQuestionNumber(questionNumber){
+    console.log(questionNumber);
+    try{
+      let question = await Question.find({questionNumber: questionNumber});
+      console.log(question);
+      return question;
+    } catch(err){
+      return {
+        error: true
+      }
+    }
 
+  }
+  async deleteQuestion(){
+
+  }
+  async updateQuestion(){
 
   }
 }
+
+module.exports = QuestionService;

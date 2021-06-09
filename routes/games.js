@@ -1,12 +1,12 @@
 module.exports = function(express){
-  const gamesService = require('../services/games');
+  const gamesController = require('../controllers/games');
   const router = express.Router();
   
-  router.get('/', gamesService.getAllGames);
+  router.get('/', gamesController.getAllGames);
 
-  router.get('/:gameId', gamesService.getGameById);
+  router.get('/:gameId', gamesController.getGameById);
 
-  router.post('/addAGame', gamesService.addGame);
+  router.post('/addAGame', gamesController.addGame);
 
   return router;
 }

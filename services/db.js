@@ -9,5 +9,5 @@ mongoose
     useUnifiedTopology: true,
     useCreateIndex: true
   })
-  .then(() => console.log('MongoDB database connection established'))
+  .then(() => console.log('Connected to MongoDB!'))
   .catch(err => console.log('Error in connecting to MongoDB!!!'));
