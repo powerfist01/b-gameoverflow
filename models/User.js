@@ -58,13 +58,14 @@ UserSchema.pre('save', function (next) {
     }
 });
 
-UserSchema.methods.comparePassword = function (passw, cb) {
-    bcrypt.compare(passw, this.password, function (err, isMatch) {
-        if (err) {
-            return cb(err);
-        }
-        cb(null, isMatch);
-    });
+UserSchema.methods.comparePassword = async function (password, cb) {
+    try{
+        let isMatch = await bcrypt.compare(password, this.password);
+        return isMatch;
+    } catch(err){
+        console.log('Error occured in comparing password')
+        return false;
+    }
 };
 
 const User = mongoose.model('User', UserSchema);

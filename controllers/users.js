@@ -1,8 +1,4 @@
 const UserService = require('../services/users');
-const jwt = require('jsonwebtoken');
-// Load User model
-const User = require('../models/User');
-const config = require('../config/index');
 
 module.exports = {
     register: async (req, res, next) => {
@@ -11,45 +7,42 @@ module.exports = {
             return res.status(400).send({ success: false, msg: 'Please provide valid !' })
         }
         let userService = new UserService();
-        let createdUser = await userService.registerNewUser(req.body);
-        if(createdUser.success == true){
-            return res.json({success: true, msg: 'New User created!'})
+        let createdUser = await userService.registerNewUser(username, email, password);
+        if (createdUser.success) {
+            return res.json({ success: true, msg: 'New User created!' })
         } else {
-            return res.status(400).json({success: false, msg: 'User already exists.'})
+            return res.status(400).json({ success: false, msg: 'User already exists.' })
         }
     },
     login: async (req, res, next) => {
-        User.findOne({ username: req.body.username }, function (err, user) {
-            if (err) throw err;
-
-            if (!user) {
-                res.status(401).send({ success: false, msg: 'Authentication failed. User not found.' });
-            } else {
-                // check if password matches
-                user.comparePassword(req.body.password, function (err, isMatch) {
-                    if (isMatch && !err) {
-                        // if user is found and password is right create a token
-                        let token = jwt.sign(user.toJSON(), config.secret, "Stack", {
-                            expiresIn: '30d'
-                        });
-                        // return the information including token as JSON
-                        res.json({ success: true, token: 'JWT ' + token });
-                    } else {
-                        res.status(401).send({ success: false, msg: 'Authentication failed. Wrong password.' });
-                    }
-                });
-            }
-        });
+        const { email, password } = req.body;
+        let userService = new UserService();
+        let loggedIn = await userService.loginUser(email, password);
+        if (loggedIn.success) {
+            return res.json({ success: true, token: 'JTW ' + loggedIn.token })
+        } else {
+            return res.status(401).send({ success: false, msg: loggedIn.result });
+        }
     },
 
     getAllUsers: async (req, res, next) => {
-        User.find(function (err, users) {
-            if (err) return next(err);
-            res.json(users);
-        });
+        
+        try {
+            let userService = new UserService();
+            let data = await userService.getAllUsers();
+            return res.json(data);
+        } catch (err) {
+            return res.status(400).send({ success: false, msg: 'Error occured!' });
+        }
     },
+
     logout: async (req, res) => {
-        req.logout();
-        res.json({ success: true, msg: 'Sign out successfully.' });
+
+        try {
+            req.logout();
+            return res.json({ success: true, msg: 'Sign out successfully.' });
+        } catch (err) {
+            return res.json({ success: false, msg: 'Error in logging out.' });
+        }
     }
 }
