@@ -6,8 +6,6 @@ const helmet = require("helmet");
 
 require('./middlewares/passport')(passport);
 
-require('dotenv').config();
-
 require('./services/db');
 
 const app = express();
@@ -15,10 +13,11 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(logger('dev'));    // configire morgan
+app.use(logger('dev'));    // configuring morgan
+
 
 const indexRouter = require('./routes/index');
 const questionRouter = require('./routes/questions')(express);
