@@ -4,7 +4,7 @@ const cors = require('cors')
 const passport = require('passport')
 const helmet = require("helmet");
 
-const config = require('../config/index');
+const config = require('./config/index');
 
 require('./middlewares/passport')(passport, config);
 
