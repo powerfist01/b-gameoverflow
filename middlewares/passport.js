@@ -2,9 +2,8 @@ let JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const User = require('../models/User');
-let config = require('../config/index');
 
-module.exports = function(passport) {
+module.exports = function(passport, config) {
   var opts = {};
   opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
   opts.secretOrKey = config.secret;

@@ -4,7 +4,9 @@ const cors = require('cors')
 const passport = require('passport')
 const helmet = require("helmet");
 
-require('./middlewares/passport')(passport);
+const config = require('../config/index');
+
+require('./middlewares/passport')(passport, config);
 
 require('./services/db');
 
@@ -34,6 +36,6 @@ app.use('/users', usersRouter);
 app.use(function (err, req, res, next) {
     console.error(err.stack)
     res.status(404)
-  })
+})
 
 module.exports = app;
