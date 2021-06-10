@@ -8,8 +8,7 @@ module.exports = {
         console.log(questions);
         res.send(questions);
     },
-    getQuestionById: async (req, res, next) => {
-        console.log(req.params);
+    getQuestionByQuestionNumber: async (req, res, next) => {
         let questionService = new QuestionService();
 
         let question = await questionService.getQuestionByQuestionNumber(req.params.id);

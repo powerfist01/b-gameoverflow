@@ -4,7 +4,7 @@ module.exports = function (express, passport) {
 
     router.get('/', questionController.getAllQuestions);
 
-    router.get('/:id', questionController.getQuestionById);
+    router.get('/:id', questionController.getQuestionByQuestionNumber);
 
     router.post('/askQuestion', passport.authenticate('jwt', { session: false }), questionController.askQuestion);
 
