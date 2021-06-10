@@ -6,7 +6,7 @@ const QuestionSchema = new Schema({
     type: String,
     required: true
   },
-  body: {
+  description: {
     type: String,
     required: true
   },
@@ -14,7 +14,7 @@ const QuestionSchema = new Schema({
     type: Array,
     required: true
   },
-  counter: {
+  questionNumber: {
     type: Number,
     required: false
   },

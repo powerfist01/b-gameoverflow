@@ -1,4 +1,4 @@
-module.exports = function (express) {
+module.exports = function (express, passport) {
     const questionController = require('../controllers/questions');
     const router = express.Router();
 
@@ -6,9 +6,9 @@ module.exports = function (express) {
 
     router.get('/:id', questionController.getQuestionById);
 
-    router.post('/ask', questionController.create);
+    router.post('/askQuestion', passport.authenticate('jwt', { session: false }), questionController.askQuestion);
 
-    router.post('/upvoteQuestion', questionController.upvoteQuestion)
+    router.post('/upvoteQuestion', passport.authenticate('jwt', { session: false }), questionController.upvoteQuestion)
 
     return router;
 }

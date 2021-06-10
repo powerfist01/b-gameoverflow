@@ -4,7 +4,7 @@ module.exports = {
     register: async (req, res, next) => {
         const { username, email, password } = req.body;
         if (!username || !password || !email) {
-            return res.status(400).send({ success: false, msg: 'Please provide valid !' })
+            return res.status(400).send({ success: false, msg: 'Please provide valid inputs!' })
         }
         let userService = new UserService();
         let createdUser = await userService.registerNewUser(username, email, password);
@@ -21,7 +21,7 @@ module.exports = {
         if (loggedIn.success) {
             return res.json({ success: true, token: 'JTW ' + loggedIn.token })
         } else {
-            return res.status(401).send({ success: false, msg: loggedIn.result });
+            return res.status(401).send({ success: false, msg: 'Error occured!' });
         }
     },
 
@@ -32,9 +32,9 @@ module.exports = {
             let data = await userService.getAllUsers();
             return res.json(data);
         } catch (err) {
-            return res.status(400).send({ success: false, msg: 'Error occured!' });
+            return res.status(500).send({ success: false, msg: 'Server Error!' });
         }
-    },
+    },  
 
     logout: async (req, res) => {
 

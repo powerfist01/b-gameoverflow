@@ -20,15 +20,20 @@ app.use(logger('dev'));    // configuring morgan
 
 
 const indexRouter = require('./routes/index');
-const questionRouter = require('./routes/questions')(express);
+const questionRouter = require('./routes/questions')(express, passport);
 const gameRouter = require('./routes/games')(express);
 const tagRouter = require('./routes/tags')(express);
-const usersRouter = require('./routes/users')(express);
+const usersRouter = require('./routes/users')(express, passport);
 
 app.use('/', indexRouter);
 app.use('/questions', questionRouter);
 app.use('/games', gameRouter);
 app.use('/tags', tagRouter);
 app.use('/users', usersRouter);
+
+app.use(function (err, req, res, next) {
+    console.error(err.stack)
+    res.status(404)
+  })
 
 module.exports = app;

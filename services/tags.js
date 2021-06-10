@@ -1,58 +1,48 @@
 const Tag = require('../models/Tag');
 
-class TagService{
-  size = 36;
-  tags = [];
-  questionId = '';
-  constructor(tags, questionId){
-    this.tags = tags;
-    this.questionId = questionId;
-  }
-  async addTags(){
-    let totalTagsSaved = 0;
-    let self = this;
-    this.tags.forEach(async function(tag){
-      let z = await self.addQuestionIdInTag(tag);
-      console.log(z)
-      if(z['isSaved'] == true){
-        console.log('Tag saved!')
-        totalTagsSaved += 1;
-      } else {
-        console.log("Error occured in saving tag", tag);
-      }
-    })
-    return {
-      totalTagsSaved: totalTagsSaved,
-      totalTags: this.tags.length
+class TagService {
+    size = 36;
+    constructor() {
+
     }
-  }
-  async deleteTag(){
-    
-  }
-  async getAllTags(){
-    let tags = await Tag.find().limit(this.size);
-    let totalTags = await Tag.find().count();
-    return {
-      tags: tags,
-      totalTags: totalTags
-    };
-  }
-  async addQuestionIdInTag(tag){
-    // creating a new tag if not exists, if exists push the question id
-    let update = {$push: { questions: this.questionId }, updatedAt: Date.now()};
-    let options = {upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
-    try{
-      let z = await Tag.findOneAndUpdate({name:tag},update, options);
-      return {
-        isSaved: true
-      }
-    } catch(err) {
-      console.log(err);
-      return {
-        isSaved: false
-      }
-    }  
-  }
+    async getAllTags() {
+        try {
+            let tags = await Tag.find().limit(this.size);
+            return { success: true, result: tags };
+        } catch (err) {
+            console.log('Error in getting all tags')
+            return { success: false, error: err, result: 'Error occured!' };
+        }
+    }
+
+    async addNewTags(tags, questionId) {
+        try {
+            for(let i=0; i<tags.length; i++){
+                let addedQuestion = await this.addQuestionIdInTag(tags[i], questionId);
+            }
+            return { success: true, result: tags };
+        } catch (err) {
+            console.log('Error in creating tags')
+            return { success: false, error: err, result: 'Error occured!' };
+        }
+    }
+
+    async addQuestionIdInTag(tag, questionId) {
+        // creating a new tag if not exists, if exists push the question id
+        try {
+            let update = { $push: { questions: questionId }, updatedAt: Date.now() };
+            let options = { upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false };
+            let newTag = await Tag.findOneAndUpdate({ name: tag }, update, options);
+            return { success: true, result: newTag };
+        } catch (err) {
+            console.log('Error occured in inserting question in tags array');
+            return { success: false, error: err, result: 'Error occured!' };
+        }
+    }
+
+    async deleteTag() {
+
+    }
 }
 
 module.exports = TagService;

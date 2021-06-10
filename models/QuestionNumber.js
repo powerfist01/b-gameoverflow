@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const QuestionNumberSchema = new Schema({
     questionNumber: {
         type: Number,
-        default: 1,
+        default: 10000001,
         required: true
     },
     createdAt: {
@@ -12,7 +12,7 @@ const QuestionNumberSchema = new Schema({
         default: Date.now
     },
     updatedAt: {
-        type: Date
+        type: Date,
     }
 });
 

@@ -1,7 +1,6 @@
-module.exports = function (express) {
+module.exports = function (express, passport) {
     const userController = require('../controllers/users');
     const router = express.Router();
-    const passport = require('passport');
 
     // Register
     router.post('/register', userController.register);

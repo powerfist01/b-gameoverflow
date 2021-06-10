@@ -6,7 +6,7 @@ const TagSchema = new Schema({
     type: String,
     required: true
   },
-  body: {
+  description: {
     type: String
   },
   questions: {
