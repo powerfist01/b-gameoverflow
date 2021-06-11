@@ -11,5 +11,8 @@ module.exports = function (express, passport) {
 
     router.get('/logout', passport.authenticate('jwt', { session: false }), userController.logout);
 
+    router.get('/confirmation', userController.verifyToken);
+    // router.post('/resend-toen', userController.resendTokenPost);
+
     return router;
 }

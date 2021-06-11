@@ -18,15 +18,14 @@ module.exports = {
         const { email, password } = req.body;
         let userService = new UserService();
         let loggedIn = await userService.loginUser(email, password);
-        if (loggedIn.success) {
+        if (loggedIn.success)
             return res.json({ success: true, token: 'JTW ' + loggedIn.token })
-        } else {
-            return res.status(401).send({ success: false, msg: 'Error occured!' });
-        }
+        else
+            return res.status(401).send({ success: false, msg: loggedIn.result });
     },
 
     getAllUsers: async (req, res, next) => {
-        
+
         try {
             let userService = new UserService();
             let data = await userService.getAllUsers();
@@ -34,7 +33,23 @@ module.exports = {
         } catch (err) {
             return res.status(500).send({ success: false, msg: 'Server Error!' });
         }
-    },  
+    },
+
+    verifyToken: async (req, res, next) => {
+        try {
+            const {token} = req.query;
+            if(!token )
+                return res.status(400).send({ success: false, msg: 'Please provide valid token and user id!' })
+            let userService = new UserService();
+            let verifiedToken = await userService.verifyUserToken(token);
+            if(verifiedToken.success)
+                return res.json({ success: true, msg: verifiedToken.result })
+            else
+                return res.status(400).send({success: false, msg: verifiedToken.result})
+        } catch (err) {
+            return res.status(500).send({ success: false, msg: 'Server Error!' });
+        }
+    },
 
     logout: async (req, res) => {
 
