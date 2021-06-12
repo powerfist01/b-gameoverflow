@@ -14,6 +14,7 @@ module.exports = {
             return res.status(400).json({ success: false, msg: 'User already exists.' })
         }
     },
+
     login: async (req, res, next) => {
         const { email, password } = req.body;
         let userService = new UserService();
@@ -37,16 +38,33 @@ module.exports = {
 
     verifyToken: async (req, res, next) => {
         try {
-            const {token} = req.query;
-            if(!token )
+            const { token } = req.query;
+            if (!token)
                 return res.status(400).send({ success: false, msg: 'Please provide valid token and user id!' })
             let userService = new UserService();
-            let verifiedToken = await userService.verifyUserToken(token);
-            if(verifiedToken.success)
+            let verifiedToken = await userService.verifyEmailUserToken(token);
+            if (verifiedToken.success)
                 return res.json({ success: true, msg: verifiedToken.result })
             else
-                return res.status(400).send({success: false, msg: verifiedToken.result})
+                return res.status(400).send({ success: false, msg: verifiedToken.result })
         } catch (err) {
+            return res.status(500).send({ success: false, msg: 'Server Error!' });
+        }
+    },
+
+    resendTokenEmailVerification: async (req, res, next) => {
+        try {
+            const { email } = req.body;
+
+            let userService = new UserService();
+            let resendToken = await userService.sendTokenForEmailVerification(email);
+
+            if (resendToken.success)
+                return res.json({ success: true, msg: resendToken.result })
+            else
+                return res.status(400).send({ success: false, msg: resendToken.result })
+        } catch (err) {
+            console.log(err);
             return res.status(500).send({ success: false, msg: 'Server Error!' });
         }
     },

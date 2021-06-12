@@ -33,8 +33,8 @@ class Mailer {
                 return temp;
             };
             // Send email
-            let info = await transporter.sendMail(mailOptions());
-            console.log(info);
+            let mailedInfo = await transporter.sendMail(mailOptions());
+            return mailedInfo;
         } catch (err) {
             console.log("Error occured here");
         }

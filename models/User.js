@@ -25,6 +25,9 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    location: {
+        type: String
+    },
     password: {
         type: String,
         required: true

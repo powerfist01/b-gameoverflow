@@ -27,17 +27,15 @@ class UserService {
                 email: email,
                 password: password
             });
-            let savedUser = await newUser.save();
-            // console.log(savedUser);
-            let token = new Token({ _userId: savedUser._id, token: crypto.randomBytes(16).toString('hex') });
-            // console.log(token);
-            let savedToken = await token.save();
-            let mailer = new Mailer();
-            mailer.sendTokenVerificationMail(savedUser, savedToken);
-            return { success: true, result: savedUser, token: savedToken };
+            let user = await newUser.save();
+            // console.log(user);
+
+            let sentToken = this.sendTokenForEmailVerification(user.email);
+
+            return { success: true, result: user };
         } catch (err) {
             console.log('User already exists!', err);
-            return { success: false, error: err, result: 'Error occured!' };
+            return { success: false, error: err, result: 'Internal Server Error!' };
         }
     }
 
@@ -50,17 +48,17 @@ class UserService {
             }
             let comparedPassword = await user.comparePassword(password);
             if (comparedPassword) {
-                return { success: true, token: await this.generateJwtToken(user) };
+                return { success: true, token: await this.generateJWTForLogin(user) };
             } else {
                 return { success: false, result: 'Password not matched.' };
             }
         } catch (err) {
             console.log('Error occured during logging!');
-            return { success: false, error: err, result: 'Error occured!' };
+            return { success: false, error: err, result: 'Internal Server Error!' };
         }
     }
 
-    async generateJwtToken(user) {
+    async generateJWTForLogin(user) {
 
         try {
             let token = jwt.sign(user.toJSON(), config.secret, { expiresIn: '7d' });
@@ -71,26 +69,70 @@ class UserService {
         }
     }
 
-    async verifyUserToken(token) {
+    async verifyEmailUserToken(token) {
 
         try {
-            let doc_token = await Token.findOne({token: token});
-            if(!doc_token)
-                return { success:false, type: 'not-verified', result: 'Unable to find a valid token. Token my have expired.' };
-            
-            let user = await User.findOne({_id: doc_token._userId});
+            let doc_token = await Token.findOne({ token: token });
+            if (!doc_token)
+                return { success: false, type: 'not-verified', result: 'Unable to find a valid token. Token my have expired.' };
+
+            let user = await User.findOne({ _id: doc_token._userId });
             if (!user)
-                return { success:false, type: 'not-verified', result: 'Unable to find a user for this token.' };
+                return { success: false, type: 'not-verified', result: 'Unable to find a user for this token.' };
 
             if (user.isVerified)
-                return { success:false, type: 'already-verified', result: 'User has already been verified.' };
+                return { success: false, type: 'already-verified', result: 'User has already been verified.' };
             user.isVerified = true;
 
             let savedUser = user.save();
             return { success: true, user: savedUser, result: 'The account has been verified.' };
         } catch (err) {
             console.log('Error in verifying the email!', err)
-            return { success: false, error: err, result: 'Error in verifying the email!' };
+            return { success: false, error: err, result: 'Internal Server Error!' };
+        }
+    }
+
+    async sendTokenForEmailVerification(email) {
+
+        let user = await User.findOne({ email: email });
+        if (!user)
+            return { success: false, result: 'User not found!' };
+
+        if (user.isVerified)
+            return { success: false, type: 'already-verified', result: 'User has already been verified.' };
+
+        let token = await this.generateTokenForEmailVerification(user);
+        if (token.success) {
+            let sendMail = await this.sendMailForEmailVerification(user, token.token);
+
+            if (sendMail.success)
+                return { success: true, result: 'Token sent via email!' };
+            else
+                return { success: false, result: 'Token not sent!' };
+        } else {
+            return { success: false, result: 'Error occured generating token for email verification!' };
+        }
+    }
+
+    async generateTokenForEmailVerification(user) {
+        try {
+            const newToken = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+            let token = await newToken.save();
+            return { success: true, result: 'Generated the token!', token: token };
+        } catch (err) {
+            console.log('Error occured in generating crypto token for email verification');
+            return { success: false, result: 'Internal Server Error!', error: err };
+        }
+    }
+
+    async sendMailForEmailVerification(user, token) {
+        try {
+            let mailer = new Mailer();
+            let mailed = await mailer.sendTokenVerificationMail(user, token);
+            return { success: true, mail: mailed, result: 'Email sent!' };
+        } catch (err) {
+            console.log('Error in sending the email')
+            return { success: false, result: 'Internal Server Error!', error: err };
         }
     }
 
