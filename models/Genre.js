@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const DeveloperSchema = new Schema({
+const Genrechema = new Schema({
     name: {
         type: String,
         required: true
@@ -10,24 +10,18 @@ const DeveloperSchema = new Schema({
         type: String,
         required: true
     },
-    developerId: {
+    genreId: {
         type: Number,
         required: true
     },
     gamesCount: {
         type: Number,
+        default: 0
     },
     backgoundImage: {
         type: String
     },
-    games: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Game'
-    }],
     description: {
-        type: String
-    },
-    website: {
         type: String
     },
     createdAt: {
@@ -39,6 +33,6 @@ const DeveloperSchema = new Schema({
     }
 });
 
-const Developer = mongoose.model('Developer', DeveloperSchema);
+const Genre = mongoose.model('Genre', Genrechema);
 
-module.exports = Developer;
+module.exports = Genre;
