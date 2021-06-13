@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const GameSchema = new Schema({
+const DeveloperSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -10,18 +10,18 @@ const GameSchema = new Schema({
         type: String,
         required: true
     },
-    gameId: {
+    gamesCount: {
         type: Number,
-        required: true
     },
-    description: {
+    imageBackgroundLink: {
         type: String
     },
-    platforms: {
-        type: Array
-    },
-    genres: {
-        type: Array
+    games: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Game'
+    }],
+    description: {
+        type: String
     },
     website: {
         type: String
@@ -35,6 +35,6 @@ const GameSchema = new Schema({
     }
 });
 
-const Game = mongoose.model('Game', GameSchema);
+const Developer = mongoose.model('Developer', DeveloperSchema);
 
-module.exports = Game;
+module.exports = Developer;
