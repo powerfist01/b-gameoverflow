@@ -27,11 +27,16 @@ const gameRouter = require('./routes/games')(express);
 const tagRouter = require('./routes/tags')(express);
 const usersRouter = require('./routes/users')(express, passport);
 
+const newsRouter = require('./routes/news')(express,  passport);
+
+
 app.use('/', indexRouter);
 app.use('/questions', questionRouter);
 app.use('/games', gameRouter);
 app.use('/tags', tagRouter);
 app.use('/users', usersRouter);
+
+app.use('/news', newsRouter);
 
 app.use(function (err, req, res, next) {
     console.error(err.stack)
