@@ -4,13 +4,13 @@ module.exports = function (express, passport) {
 
     router.get('/', newsController.getAllNews);
 
-    router.get('/news/:id', newsController.getNewsById);
+    router.get('/:id', newsController.getNewsById);
 
-    router.get('/news/:id', newsController.getNewsByTag);
+    // router.get('/tags/:tag', newsController.getNewsByTag);
 
     router.post('/insertLatestNews', passport.authenticate('jwt', { session: false }), newsController.insertLatestNews);
 
-    router.post('/updateNews', passport.authenticate('jwt', { session: false }), newsController.updateNews);
+    // router.post('/updateNews', passport.authenticate('jwt', { session: false }), newsController.updateNews);
 
     return router;
 }

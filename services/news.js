@@ -14,7 +14,8 @@ class NewsService {
     }
     async getNewsById(id) {
         try {
-
+            let res = await News.findById(id);
+            return res;
         } catch (err) {
             return { success: false, error: err, result: 'Error occured!' };
         }
@@ -22,7 +23,6 @@ class NewsService {
     async insertLatestNews(newsObject) {
         try {
             let { heading, subHeading, tags, body, author, timeToRead, image, imageDescription } = newsObject;
-            console.log(heading, subHeading, tags, body, author, timeToRead, image, imageDescription);
             tags = this.getTagsArray(tags);
 
             let newNews = new News({
@@ -36,7 +36,6 @@ class NewsService {
                 imageDescription: imageDescription
             });
             let savedNews = await newNews.save();
-            console.log(savedNews);
             return { success: true, result: savedNews };
 
         } catch (err) {
