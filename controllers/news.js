@@ -8,7 +8,7 @@ module.exports = {
 
             res.send({success: true, message: 'Latest news for you!', data: news});
         } catch (err) {
-            res.send({success: false, message: 'Error occured!'})
+            res.send({success: false, message: 'Error occured!'});
         }
     },
     getNewsById: async (req, res, next) => {
@@ -20,7 +20,7 @@ module.exports = {
 
             res.send({success: true, message: 'Have a great news!', data: news});
         } catch (err){
-            res.send({success: false, message: 'Error occured!'})
+            res.send({success: false, message: 'Error occured!'});
         }
     },
     getNewsByTag: async (req, res, next) => {
