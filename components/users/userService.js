@@ -1,22 +1,32 @@
-const User = require('../models/User')
-const Token = require('../models/VerificationToken')
+const User = require('./User')
+const Token = require('../../models/VerificationToken')
 
-const config = require('../config/index');
+const config = require('../../config/index');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const Mailer = require('../utils/mailer/mailer');
+const Mailer = require('../../utils/mailer/mailer');
 
 class UserService {
     constructor() {
 
     }
     async getAllUsers() {
-        try {
-            let res = await User.find({}).sort({ createdAt: -1 });
-            return res;
-        } catch (err) {
-            return { success: false, error: err };
+        let res = await User.find({}).sort({ createdAt: -1 });
+        return res;
+    }
+
+    async checkIfUsernameExists(username){
+        let res = await User.find({username: username});
+        console.log(res);
+        if(res.length){
+            return {success: true, data: username, details: 'Entered username already exists!'};
+        } else {
+            return {success: true, data: username, details: 'Username is available!'};
         }
+    }
+
+    async checkIfEmailExists(email){
+        let res = await User.find({email: email});
     }
 
     async registerNewUser(username, email, password) {
@@ -28,7 +38,6 @@ class UserService {
                 password: password
             });
             let user = await newUser.save();
-            // console.log(user);
 
             let sentToken = this.sendTokenForEmailVerification(user.email);
 
