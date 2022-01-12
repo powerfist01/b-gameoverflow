@@ -1,5 +1,5 @@
-const Question = require('../models/Question')
-const QuestionNumber = require('../models/QuestionNumber')
+const Question = require('./Question')
+const QuestionNumber = require('./QuestionNumber')
 
 class QuestionService {
     constructor() {

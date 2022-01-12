@@ -1,4 +1,4 @@
-const Answer = require('../models/Answer')
+const Answer = require('./Answer')
 
 class AnswerService {
   constructor(){

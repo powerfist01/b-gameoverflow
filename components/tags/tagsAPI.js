@@ -1,5 +1,5 @@
 module.exports = function(express){
-  const tagController = require('../controllers/tags');
+  const tagController = require('./tagsController');
   const router = express.Router();
   
   router.get('/getAllTags', tagController.getAllTags);

@@ -1,4 +1,4 @@
-const NewsService = require('../services/news');
+const NewsService = require('./newsService');
 
 module.exports = {
     getAllNews: async (req, res, next) => {

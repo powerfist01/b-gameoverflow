@@ -1,5 +1,5 @@
 module.exports = function (express, passport) {
-    const newsController = require('../controllers/news');
+    const newsController = require('./newsController');
     const router = express.Router();
 
     router.get('/', newsController.getAllNews);

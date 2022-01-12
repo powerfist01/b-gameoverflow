@@ -1,5 +1,5 @@
-const QuestionService = require('../services/questions');
-const TagService = require('../services/tags');
+const QuestionService = require('./questionService');
+const TagService = require('../tags/tagsService');
 
 module.exports = {
     getAllQuestions: async (req, res, next) => {

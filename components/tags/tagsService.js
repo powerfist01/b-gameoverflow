@@ -1,4 +1,4 @@
-const Tag = require('../models/Tag');
+const Tag = require('./Tag');
 
 class TagService {
     size = 36;

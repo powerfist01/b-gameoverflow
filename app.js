@@ -8,7 +8,7 @@ const config = require('./config/index');
 
 require('./middlewares/passport')(passport, config);
 
-require('./services/db');
+require('./services/dbService');
 
 const app = express();
 
@@ -20,22 +20,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(logger('dev'));    // configuring morgan
 
-
 const indexRouter = require('./routes/index');
-const questionRouter = require('./routes/questions')(express, passport);
-const gameRouter = require('./routes/games')(express);
-const tagRouter = require('./routes/tags')(express);
+const questionRouter = require('./components/questions/questionsAPI')(express, passport);
+const gameRouter = require('./components/games/gamesAPI')(express);
+const tagRouter = require('./components/tags/tagsAPI')(express);
 const usersRouter = require('./components/users/userAPI')(express, passport);
-
-const newsRouter = require('./routes/news')(express,  passport);
-
+const newsRouter = require('./components/news/newsAPI')(express,  passport);
 
 app.use('/', indexRouter);
 app.use('/questions', questionRouter);
 app.use('/games', gameRouter);
 app.use('/tags', tagRouter);
 app.use('/users', usersRouter);
-
 app.use('/news', newsRouter);
 
 app.use(function (err, req, res, next) {

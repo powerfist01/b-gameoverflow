@@ -1,5 +1,5 @@
 module.exports = function (express, passport) {
-    const questionController = require('../controllers/questions');
+    const questionController = require('./questionsController');
     const router = express.Router();
 
     router.get('/', questionController.getAllQuestions);

@@ -1,5 +1,5 @@
 const User = require('./User')
-const Token = require('../../models/VerificationToken')
+const Token = require('./VerificationToken')
 
 const config = require('../../config/index');
 const jwt = require('jsonwebtoken');

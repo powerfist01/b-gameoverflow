@@ -1,4 +1,4 @@
-const News = require('../models/News')
+const News = require('./News')
 
 class NewsService {
     constructor() {

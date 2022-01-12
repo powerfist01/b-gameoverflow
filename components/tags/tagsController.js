@@ -1,4 +1,4 @@
-const TagService = require('../services/tags');
+const TagService = require('./tagsService');
 module.exports = {
 
   getAllTags: async (req,res,next) => {
