@@ -3,10 +3,15 @@ const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 
-var UserAddress = new Schema({
+const UserAddress = new Schema({
     city: String,
     state: String,
     country: String
+});
+
+const UserProgress = new Schema({
+    ratings: Array,
+    playList: Array
 });
 
 const UserSchema = new Schema({
@@ -31,17 +36,12 @@ const UserSchema = new Schema({
         unique: true,
         required: true
     },
-    backupEmail: {
-        type: String,
-    },
     isVerified: {
         type: Boolean,
         default: false
     },
     address: UserAddress,
-    location: {
-        type: String
-    },
+    progress: UserProgress,
     password: {
         type: String,
         required: true
@@ -77,10 +77,9 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.methods.comparePassword = async function (password, cb) {
     try {
-        let isMatch = await bcrypt.compare(password, this.password);
+        let isMatch = bcrypt.compare(password, this.password);
         return isMatch;
     } catch (err) {
-        console.log('Error occured in comparing password')
         return false;
     }
 };
